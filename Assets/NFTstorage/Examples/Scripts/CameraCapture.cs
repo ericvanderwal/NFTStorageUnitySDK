@@ -25,20 +25,31 @@ public class CameraCapture : MonoBehaviour
         button.onClick.AddListener(TakePicture);
     }
 
+    /// <summary>
+    /// Take a picture of the screen using the NFT Storage Helper function
+    /// </summary>
     private void TakePicture()
     {
         button.interactable = false;
         SetText("Taking photo");
-        StartCoroutine(NFTstorage.Helper.TakeScreenShot(CallBackOnCamera));
+        StartCoroutine(NFTstorage.Helper.TakeScreenShot(UploadScreenShot));
     }
 
-    private void CallBackOnCamera(byte[] bytes)
+    /// <summary>
+    /// Upload the screenshot to NFT storage
+    /// </summary>
+    /// <param name="bytes"></param>
+    private void UploadScreenShot(byte[] bytes)
     {
         SetText("Uploading photo");
-        StartCoroutine(NFTstorage.NetworkManager.UploadObject(CallBackOnUpload, bytes));
+        StartCoroutine(NFTstorage.NetworkManager.UploadObject(UploadCompleted, bytes));
     }
 
-    private void CallBackOnUpload(NFTstorage.DataResponse obj)
+    /// <summary>
+    /// Upload has been completed to NFT storage
+    /// </summary>
+    /// <param name="obj"></param>
+    private void UploadCompleted(NFTstorage.DataResponse obj)
     {
         if (!obj.Success)
         {
@@ -60,6 +71,10 @@ public class CameraCapture : MonoBehaviour
         button.interactable = true;
     }
 
+    /// <summary>
+    /// Set the text of the input field on screen
+    /// </summary>
+    /// <param name="text"></param>
     private void SetText(string text)
     {
         inputField.text = text;
